@@ -12,8 +12,35 @@ export default function ConsultScreen() {
             duration: '',
             severity: '',
             addInfo: '',
-        });
+    });
 
+    const [response, setResponse] = useState('');
+
+
+    const callOpenAIAPI = async () => {
+        const prompt = buildAIPrompt(form);
+        try {
+            const response = await fetch('/api/ask', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ prompt }),
+            });
+
+            const data = await response.json();
+            
+            if (data.response) {
+                setResponse(data.response);
+            } else {
+                setResponse('Something went wrong. Try again.');
+            }
+
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Something went wrong. Please try again.');
+        }
+        };
     
 
     return (
@@ -66,6 +93,27 @@ export default function ConsultScreen() {
         </SafeAreaProvider>
     )}
 
+
+function buildAIPrompt(form: Record<string, string>) {
+  return `
+Based on the patient's responses below, generate a bulleted list of the 
+top 3 possible causes of the patient's issue. 
+For each possible cause, list the required documentation to diagnose it, 
+whether each requirement is known, and give a probability that this condition
+is causing the issue.
+Of the possible causes, pick the one that is most likely to have 
+caused the issue. Come up with a treatment plan for the patient.
+Remind the patient that your diagnosis may not be accurate and it is best
+to consult a health professional.
+
+Patient's symptoms: ${form.symptoms}
+Duration: ${form.duration}
+Severity: ${form.severity}
+Additional information: ${form.addInfo}
+
+Provide the response in clear, empathetic language.
+`;
+}
 
 
 
