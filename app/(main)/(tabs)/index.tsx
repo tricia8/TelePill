@@ -22,6 +22,8 @@ import { fetchHealthNewsByCountry } from "@/lib/api/api";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { QueryClientProvider, useQuery } from "@tanstack/react-query";
+import { ArticleModal } from "@/components/ArticleModal";
+import HealthTipsList from "@/components/HealthTipsList";
 
 export default function HomeScreen() {
   // const [news, setNews] = useState([]);
@@ -49,129 +51,93 @@ export default function HomeScreen() {
     fetchNews();
   }, [selectedCountry]); */
 
-  /* if (isError) {
-    return (
-      <View style={styles.error}>
-        <Text>Error: {error?.message}</Text>
-      </View>
-    );
-  } */
-
   return (
     <SafeAreaProvider style={styles.container}>
-      <ScrollView>
-        <View style={styles.titleContainer}>
-          <ThemedText type="title">Hi there!</ThemedText>
-          <TouchableOpacity>
-            <Ionicons name="notifications" size={24} color="gold" />
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.rowContainer}>
-          <ThemedView style={styles.newsContainer}>
-            <ThemedText type="subtitle" style={styles.header}>
-              Latest News
-            </ThemedText>
-            <ThemedText style={[styles.smallText]}>
-              Your daily dose of health news in your area, or anywhere of
-              interest
-            </ThemedText>
-            <View>
-              <SearchBar></SearchBar>
-              {/* Drop down picker for country default curr location*/}
-
-              {isLoading ? (
-                <ActivityIndicator size="large" />
-              ) : isError ? (
-                <View style={styles.error}>
-                  <Text>Error: {error.message}</Text>
-                </View>
-              ) : (
-                <FlatList
-                  data={data.articles}
-                  keyExtractor={(item) => item.url}
-                  renderItem={({ item }) => {
-                    return (
-                      <TouchableOpacity
-                        style={styles.articleContainer}
-                        onPress={() => {
-                          setSelectedNews(item);
-                          setModalVisible(true);
-                        }}
-                      >
-                        <ThemedText type="defaultSemiBold">
-                          {item.title}
-                        </ThemedText>
-                        {item.urlToImage && (
-                          <Image
-                            source={{ uri: item.urlToImage }}
-                            style={styles.cardImage}
-                          />
-                        )}
-                        <Text style={styles.articleDescription}>
-                          {item.description}
-                        </Text>
-                      </TouchableOpacity>
-                    );
-                  }}
-                ></FlatList>
-              )}
-            </View>
-            <Modal
-              animationType="slide"
-              transparent={true}
-              visible={modalVisible}
-              onRequestClose={() => {
-                setModalVisible(!modalVisible);
-              }}
-            >
-              <View>
-                <View style={{ flexDirection: "row" }}>
-                  <ThemedText type="defaultSemiBold">
-                    {selectedNews?.title}
-                  </ThemedText>
-                  <Pressable>
-                    <Ionicons
-                      name="checkmark-circle"
-                      size={32}
-                      color="green"
-                      onPress={() => setModalVisible(!modalVisible)}
-                    />
-                  </Pressable>
-                </View>
-                <Image
-                  source={{ uri: selectedNews?.urlToImage }}
-                  style={styles.cardImage}
-                />
-                <Text style={styles.articleDescription}>
-                  {selectedNews?.content}
-                </Text>
-                <TouchableOpacity
-                  style={styles.readMoreButton}
-                  onPress={() => {
-                    if (selectedNews?.url) {
-                      Linking.openURL(selectedNews.url);
-                    }
-                  }}
-                >
-                  <Text>Read Full Article</Text>
-                </TouchableOpacity>
-              </View>
-            </Modal>
-          </ThemedView>
-
-          <ThemedView style={styles.newsContainer}>
-            <ThemedText type="subtitle" style={{ fontSize: RFValue(20) }}>
-              Local Health Campaigns
-            </ThemedText>
-            <ThemedText style={styles.smallText}></ThemedText>
-          </ThemedView>
-        </View>
-
-        <TouchableOpacity style={styles.listContainer}>
-          <ThemedText type="subtitle">Preventive Health Tips</ThemedText>
+      {/*<ScrollView
+        contentContainerStyle={styles.contentContainer}
+        nestedScrollEnabled={true}
+      > */}
+      <View style={styles.titleContainer}>
+        <ThemedText type="title">Hi there!</ThemedText>
+        <TouchableOpacity>
+          <Ionicons name="notifications" size={24} color="gold" />
         </TouchableOpacity>
-      </ScrollView>
+      </View>
+
+      <View style={styles.rowContainer}>
+        <ThemedView style={styles.newsContainer}>
+          <ThemedText type="subtitle" style={styles.header}>
+            Latest News
+          </ThemedText>
+          <ThemedText style={[styles.smallText]}>
+            Your daily dose of health news in your area, or anywhere of interest
+          </ThemedText>
+          <View>
+            <SearchBar></SearchBar>
+            {/* Drop down picker for country default curr location*/}
+
+            {isLoading ? (
+              <ActivityIndicator size="large" />
+            ) : isError ? (
+              <View style={styles.error}>
+                <Text>Error: {error.message}</Text>
+              </View>
+            ) : (
+              <FlatList
+                data={data.articles}
+                keyExtractor={(item) => item.url}
+                renderItem={({ item }) => {
+                  return (
+                    <TouchableOpacity
+                      style={styles.articleContainer}
+                      onPress={() => {
+                        setSelectedNews(item);
+                        setModalVisible(true);
+                      }}
+                    >
+                      <ThemedText type="defaultSemiBold">
+                        {item.title}
+                      </ThemedText>
+                      {item.urlToImage && (
+                        <Image
+                          source={{ uri: item.urlToImage }}
+                          style={styles.cardImage}
+                        />
+                      )}
+                      <Text style={styles.articleDescription}>
+                        {item.description}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                }}
+                nestedScrollEnabled={true}
+                style={{ flex: 1 }}
+              />
+            )}
+          </View>
+          <ArticleModal
+            isVisible={modalVisible}
+            onClose={() => {
+              setModalVisible(!modalVisible);
+            }}
+            article={selectedNews}
+          />
+        </ThemedView>
+
+        <ThemedView style={styles.newsContainer}>
+          <ThemedText type="subtitle" style={{ fontSize: RFValue(20) }}>
+            Local Health Campaigns
+          </ThemedText>
+          <ThemedText style={styles.smallText}></ThemedText>
+        </ThemedView>
+      </View>
+      <HealthTipsList />
+
+      {/* <TouchableOpacity style={styles.listContainer}>
+        <ThemedText type="subtitle">Preventive Health Tips</ThemedText>
+
+      </TouchableOpacity> */}
+      {/* </ScrollView> */}
     </SafeAreaProvider>
   );
 }
@@ -179,22 +145,24 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 30,
-    paddingVertical: 40,
+    paddingHorizontal: 20,
+    paddingVertical: 20,
   },
   titleContainer: {
+    // flex: 0.5,
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
     justifyContent: "space-between",
   },
   rowContainer: {
-    marginTop: 15,
+    height: "50%",
+    marginTop: 8,
     marginBottom: 8,
     flexDirection: "row",
     flexWrap: "wrap",
     gap: 8,
-    justifyContent: "center",
+    justifyContent: "space-between",
   },
   newsContainer: {
     gap: 8,
@@ -211,6 +179,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 15,
     backgroundColor: "#5faaff",
+    margin: 10,
   },
   cardContainer: {
     borderRadius: 8,
@@ -235,7 +204,7 @@ const styles = StyleSheet.create({
     fontSize: RFValue(20),
   },
   smallText: {
-    fontSize: RFValue(15),
+    fontSize: RFValue(14),
     fontStyle: "italic",
   },
   error: {},
