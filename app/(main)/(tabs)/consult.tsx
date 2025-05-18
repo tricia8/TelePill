@@ -5,6 +5,8 @@ import { Button, ScrollView, StyleSheet, Text, TextInput, View } from 'react-nat
 import { SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { useState } from 'react';
+import { generateText } from '@/api/gemini';
+
 
 export default function ConsultScreen() {
     const [form, setForm] = useState({
@@ -17,31 +19,47 @@ export default function ConsultScreen() {
     const [response, setResponse] = useState('');
 
 
-    const callOpenAIAPI = async () => {
+    const callGeminiAPI = async () => {
+        setForm({
+            symptoms: '',
+            duration: '',
+            severity: '',
+            addInfo: '',
+        })
         const prompt = buildAIPrompt(form);
+        console.log("Submitting prompt:", prompt);
+
         try {
-            const response = await fetch('/api/ask', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ prompt }),
-            });
-
-            const data = await response.json();
-            
-            if (data.response) {
-                setResponse(data.response);
-            } else {
-                setResponse('Something went wrong. Try again.');
-            }
-
+            const text = await generateText(prompt);
+            console.log("Got response:", text);
+            setResponse(text);
         } catch (error) {
             console.error('Error:', error);
-            alert('Something went wrong. Please try again.');
-        }
         };
+    }
     
+    function buildAIPrompt(form: Record<string, string>) {
+        return `
+        You are a medical assistant. Based on the patient's responses below, 
+        generate a bulleted list of the top 3 possible causes of the patient's issue. 
+        For each possible cause, list the required documentation to diagnose it, 
+        whether each requirement is known, and give a probability that this condition
+        is causing the issue.
+        Of the possible causes, pick the one that is most likely to have 
+        caused the issue. Come up with a treatment plan for the patient.
+        At the end, remind the patient that your diagnosis may not be accurate and 
+        it is best to consult a health professional.
+
+        Patient's symptoms: ${form.symptoms}
+        Duration: ${form.duration}
+        Severity: ${form.severity}
+        Additional information: ${form.addInfo}
+
+        Provide the response in clear, empathetic language.
+        `;
+    }
+
+
 
     return (
         <SafeAreaProvider>
@@ -85,7 +103,11 @@ export default function ConsultScreen() {
                                     onChangeText={text => setForm(prev => ({ ...prev, addInfo: text}))}
                                 />
                                 
-                            <Button title='Submit' onPress={callOpenAIAPI}/>
+                            <Button title='Submit' onPress={callGeminiAPI}/>
+                        </View>
+                        
+                        <View style={styles.response}>
+                            {response && <ThemedText>{response}</ThemedText>}
                         </View>
                     </ThemedView>
                 </ScrollView>
@@ -94,26 +116,7 @@ export default function ConsultScreen() {
     )}
 
 
-function buildAIPrompt(form: Record<string, string>) {
-  return `
-Based on the patient's responses below, generate a bulleted list of the 
-top 3 possible causes of the patient's issue. 
-For each possible cause, list the required documentation to diagnose it, 
-whether each requirement is known, and give a probability that this condition
-is causing the issue.
-Of the possible causes, pick the one that is most likely to have 
-caused the issue. Come up with a treatment plan for the patient.
-Remind the patient that your diagnosis may not be accurate and it is best
-to consult a health professional.
-
-Patient's symptoms: ${form.symptoms}
-Duration: ${form.duration}
-Severity: ${form.severity}
-Additional information: ${form.addInfo}
-
-Provide the response in clear, empathetic language.
-`;
-}
+   
 
 
 
@@ -133,5 +136,8 @@ const styles = StyleSheet.create({
         fontSize: RFValue(12),
         paddingHorizontal: 8,
     },
-
+    response: {
+        fontSize: RFValue(12),
+        paddingTop: 10,
+    }
 })

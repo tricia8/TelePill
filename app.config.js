@@ -1,4 +1,6 @@
-{
+import 'dotenv/config';
+
+export default {
   "expo": {
     "name": "telepill",
     "slug": "telepill",
@@ -37,6 +39,9 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    extra: {
+      geminiApiKey: process.env.GEMINI_APIKEY,
     }
   }
 }
