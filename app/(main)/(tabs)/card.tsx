@@ -4,6 +4,8 @@ import { Alert, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View 
 import { SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import { useState, useEffect } from 'react';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { speak } from '@/utils/text-to-speech';
+import { MaterialIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -17,6 +19,19 @@ export default function CardScreen() {
         medications: '',
         emergencyContact: '',
     });
+
+    const text = 
+        `Fill in your emergency health details below.
+        This information may help health professionals provide faster and safer care during an emergency.
+        In the first input field, enter your name.
+        In the second input field, enter your date of birth.
+        In the third input field, enter your blood type.
+        In the fourth input field, enter your allergies.
+        In the fifth input field, enter your medical conditions.
+        In the sixth input field, enter your medications.
+        In the last input field, enter your emergency contact.`
+
+    const readAloud = () => { speak(text) };
 
     useEffect(() => {
         const loadInfo = async () => {
@@ -43,6 +58,10 @@ export default function CardScreen() {
                 <ScrollView>
                     <View style={styles.header}>
                         <ThemedText type="title">Emergency Info</ThemedText>
+
+                        <TouchableOpacity onPress={readAloud}>
+                                <MaterialIcons name="volume-up" color="#00B3B3" size={35}></MaterialIcons>
+                            </TouchableOpacity>
                     </View>
 
                     <View style={styles.card}>
