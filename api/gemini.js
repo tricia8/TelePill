@@ -5,7 +5,7 @@ const apiKey = Constants.expoConfig.extra.geminiApiKey;
 export async function generateText(prompt) {
   try {
     const response = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}",
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
       {
         method: "POST",
         headers: {
@@ -22,7 +22,7 @@ export async function generateText(prompt) {
     const data = await response.json();
     console.log("Raw API response:", data);
 
-    return data.candidates?.[0]?.content?.parts?.[0]?.text ?? "No response";
+    return data.candidates?.[0]?.content?.parts?.[0]?.text ?? "I have no response.";
   } catch (err) {
     console.error("Error calling Gemini:", err);
   }
