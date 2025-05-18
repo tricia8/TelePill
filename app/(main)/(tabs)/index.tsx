@@ -17,13 +17,12 @@ import { Ionicons } from "@expo/vector-icons";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { SearchBar } from "react-native-screens";
 import { fetchHealthNewsByCountry } from "@/lib/api/api";
-import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { QueryClientProvider, useQuery } from "@tanstack/react-query";
 import { ArticleModal } from "@/components/ArticleModal";
 import HealthTipsList from "@/components/HealthTipsList";
+import { HealthNewsList } from "@/components/HealthNewsList";
 
 export default function HomeScreen() {
   // const [news, setNews] = useState([]);
@@ -44,8 +43,6 @@ export default function HomeScreen() {
     queryKey: ["newsByCategory"],
     queryFn: () => fetchHealthNewsByCountry(country),
   });
-
-  const router = useRouter();
 
   /* useEffect(() => {
     fetchNews();
@@ -73,10 +70,15 @@ export default function HomeScreen() {
             Your daily dose of health news in your area, or anywhere of interest
           </ThemedText>
           <View>
-            <SearchBar></SearchBar>
             {/* Drop down picker for country default curr location*/}
 
-            {isLoading ? (
+            <HealthNewsList
+              data={data}
+              error={error}
+              isError={isError}
+              isLoading={isLoading}
+            />
+            {/* {isLoading ? (
               <ActivityIndicator size="large" />
             ) : isError ? (
               <View style={styles.error}>
@@ -113,7 +115,7 @@ export default function HomeScreen() {
                 nestedScrollEnabled={true}
                 style={{ flex: 1 }}
               />
-            )}
+            )} */}
           </View>
           <ArticleModal
             isVisible={modalVisible}
