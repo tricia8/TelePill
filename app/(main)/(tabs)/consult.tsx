@@ -1,11 +1,14 @@
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedTextInput } from '@/components/ThemedTextInput';
-import { Button, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { useState } from 'react';
 import { generateText } from '@/api/gemini';
+import { speak } from '@/utils/text-to-speech';
+import { MaterialIcons } from '@expo/vector-icons';
+import removeMarkdown from 'remove-markdown';
 
 
 export default function ConsultScreen() {
@@ -18,6 +21,17 @@ export default function ConsultScreen() {
 
     const [response, setResponse] = useState('');
 
+    const text = 
+        `Answer the following questions and click submit to get suggestions and advice.
+        Question 1, what symptoms are you experiencing?
+        Question 2, how long have you been experiencing these symptoms?
+        Question 3, how severe are your symptoms?
+        Question 4, is there any other information about your medical history or lifestyle that you think is important?
+        Click submit after you are done.`
+
+    const readAloud = () => { speak(text) };
+
+    const readResponse = () => { speak(removeMarkdown(response)) };
 
     const callGeminiAPI = async () => {
         setForm({
@@ -32,7 +46,7 @@ export default function ConsultScreen() {
         try {
             const text = await generateText(prompt);
             console.log("Got response:", text);
-            setResponse(text);
+            setResponse(removeMarkdown(text));
         } catch (error) {
             console.error('Error:', error);
         };
@@ -66,8 +80,15 @@ export default function ConsultScreen() {
             <SafeAreaView>
                 <ScrollView>
                     <ThemedView style={styles.container}>
+                        <View style={styles.header}>
+                            <ThemedText type="title">Ask the AI!</ThemedText>
+                            <TouchableOpacity onPress={readAloud}>
+                                <MaterialIcons name="volume-up" color="#00B3B3" size={35}></MaterialIcons>
+                            </TouchableOpacity>
+                        </View>
+
                         <View style={styles.form}>
-                            <ThemedText>What symptoms are you experiencing?</ThemedText>
+                            <ThemedText style={styles.question}>What symptoms are you experiencing?</ThemedText>
                                 <ThemedTextInput 
                                     style={styles.input} 
                                     multiline
@@ -76,7 +97,7 @@ export default function ConsultScreen() {
                                     onChangeText={text => setForm(prev => ({ ...prev, symptoms: text}))}
                                 />
                             
-                            <ThemedText>How long have you been experiencing these symptoms?</ThemedText>
+                            <ThemedText style={styles.question}>How long have you been experiencing these symptoms?</ThemedText>
                                 <ThemedTextInput 
                                     style={styles.input} 
                                     multiline
@@ -85,7 +106,7 @@ export default function ConsultScreen() {
                                     onChangeText={text => setForm(prev => ({ ...prev, duration: text}))}
                                 />                                
 
-                            <ThemedText>How severe are your symptoms?</ThemedText>
+                            <ThemedText style={styles.question}>How severe are your symptoms?</ThemedText>
                                 <ThemedTextInput 
                                     style={styles.input} 
                                     multiline
@@ -94,7 +115,7 @@ export default function ConsultScreen() {
                                     onChangeText={text => setForm(prev => ({ ...prev, severity: text}))}
                                 />
 
-                            <ThemedText>Is there any other information about your health or lifestyle that you think is important?</ThemedText>
+                            <ThemedText style={styles.question}>Is there any other information about your medical history or lifestyle that you think is important?</ThemedText>
                                 <ThemedTextInput 
                                     style={styles.input} 
                                     multiline
@@ -103,12 +124,23 @@ export default function ConsultScreen() {
                                     onChangeText={text => setForm(prev => ({ ...prev, addInfo: text}))}
                                 />
                                 
-                            <Button title='Submit' onPress={callGeminiAPI}/>
+                            <TouchableOpacity onPress={callGeminiAPI} style={styles.button}>
+                                <Text style={styles.buttonText}>SUBMIT</Text>
+                            </TouchableOpacity>
                         </View>
                         
-                        <View style={styles.response}>
-                            {response && <ThemedText>{response}</ThemedText>}
-                        </View>
+                        
+                        {response && 
+                            <View style={styles.response}>
+                                <View style={styles.header}>
+                                    <ThemedText type="subtitle">AI's response:</ThemedText>
+                                    <TouchableOpacity onPress={readResponse}>
+                                        <MaterialIcons name="volume-up" color="#00B3B3" size={35}></MaterialIcons>
+                                    </TouchableOpacity>
+                                </View>
+                                <ThemedText>{response}</ThemedText>
+                            </View>
+                        }
                     </ThemedView>
                 </ScrollView>
             </SafeAreaView>
@@ -128,16 +160,33 @@ const styles = StyleSheet.create({
         paddingVertical: 30,
         flex: 1,
     },
+    header: {
+        flexDirection: 'row',
+        marginBottom: 10,
+        justifyContent: 'space-between',  
+        alignItems: 'center',
+    },
     form: {
         flex: 1,
         gap: 10,
     },
+    question: {
+        fontSize: RFValue(14),
+    },
     input: {
-        fontSize: RFValue(12),
+        fontSize: RFValue(14),
         paddingHorizontal: 8,
     },
+    button: {
+        backgroundColor: '#00B3B3',
+        padding: 10,
+    },
+    buttonText: {
+        fontSize: RFValue(14),
+        textAlign: 'center',
+    },
     response: {
-        fontSize: RFValue(12),
-        paddingTop: 10,
-    }
+        fontSize: RFValue(14),
+        paddingTop: 20,
+    },
 })
