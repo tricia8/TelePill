@@ -126,6 +126,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 8,
     justifyContent: "space-between",
+    marginTop: 10,
   },
   rowContainer: {
     height: "50%",
