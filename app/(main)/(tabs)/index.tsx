@@ -1,17 +1,4 @@
-import {
-  StyleSheet,
-  ScrollView,
-  SafeAreaView,
-  View,
-  Text,
-  TouchableOpacity,
-  FlatList,
-  ActivityIndicator,
-  Modal,
-  Pressable,
-  Image,
-  Linking,
-} from "react-native";
+import { StyleSheet, ScrollView, SafeAreaView, View } from "react-native";
 import { RFValue } from "react-native-responsive-fontsize";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -24,7 +11,6 @@ import HealthTipsList from "@/components/HealthTipsList";
 import { HealthNewsList } from "@/components/HealthNewsList";
 
 export default function HomeScreen() {
-  // const [news, setNews] = useState([]);
   interface NewsArticle {
     author: string;
     title: string;
@@ -119,7 +105,7 @@ export default function HomeScreen() {
           />
         </ThemedView>
       </View>
-      <ThemedView>
+      <ThemedView style={{ marginVertical: 10, bottom: 30 }}>
         <HealthTipsList />
       </ThemedView>
       {/* </ScrollView> */}
@@ -152,7 +138,7 @@ const styles = StyleSheet.create({
   },
   newsContainer: {
     gap: 8,
-    backgroundColor: "coral",
+    backgroundColor: "#915cc7",
     padding: 10,
     flexBasis: "48%",
     minWidth: 150,
@@ -160,7 +146,7 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     borderRadius: 10,
     borderWidth: 1,
-    height: 300,
+    height: 450,
   },
   articleContainer: {
     borderRadius: 10,
