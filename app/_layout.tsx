@@ -10,7 +10,7 @@ import "react-native-reanimated";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { QueryClientProvider } from "@tanstack/react-query";
-import queryClient from "../lib/react-query/queryClient";
+import { queryClient } from "../lib/react-query/queryClient";
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
