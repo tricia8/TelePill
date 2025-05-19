@@ -9,7 +9,9 @@ import {
   StyleSheet,
 } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { ThemedText } from "@/components/ThemedText";
+import { Dimensions } from "react-native";
 
 interface ArticleModalProps {
   isVisible: boolean; // modal visibility
@@ -45,7 +47,7 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
             {article.title}
           </ThemedText>
           <Pressable onPress={onClose}>
-            <AntDesign name="closecircle" size={32} color="black" />
+            <MaterialIcons name="cancel" size={32} color="black" />{" "}
           </Pressable>
         </View>
 
@@ -53,6 +55,7 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
           <Image
             source={{ uri: article.urlToImage }}
             style={styles.cardImage}
+            resizeMode="contain"
           />
         )}
 
@@ -73,6 +76,8 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
   );
 };
 
+const screenWidth = Dimensions.get("window").width;
+
 const styles = StyleSheet.create({
   modalContainer: {
     // flex: 1,
@@ -87,14 +92,13 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 10,
   },
   cardImage: {
     height: 200,
-    width: 400,
+    width: screenWidth - 40,
     objectFit: "contain",
     marginBottom: 10,
-    borderRadius: 5,
+    borderRadius: 10,
   },
   articleDescription: {
     marginBottom: 10,
