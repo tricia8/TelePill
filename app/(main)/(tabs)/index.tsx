@@ -13,13 +13,12 @@ import {
   Linking,
 } from "react-native";
 import { RFValue } from "react-native-responsive-fontsize";
-import { Ionicons } from "@expo/vector-icons";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { fetchHealthNewsByCountry } from "@/lib/api/api";
+import { fetchHealthNewsByCountry, fetchMultipleKeywords } from "@/lib/api/api";
 import { useState } from "react";
-import { QueryClientProvider, useQuery } from "@tanstack/react-query";
+import { useQueries, useQuery } from "@tanstack/react-query";
 import { ArticleModal } from "@/components/ArticleModal";
 import HealthTipsList from "@/components/HealthTipsList";
 import { HealthNewsList } from "@/components/HealthNewsList";
@@ -37,12 +36,38 @@ export default function HomeScreen() {
 
   const [selectedNews, setSelectedNews] = useState<NewsArticle | null>(null);
   // const { country } = useLocalSearchParams(); // extracts country parameter from the URL parameters (or: retrieve from firebase)
-  const country = "us"; //dummy country
+  const [country, setCountry] = useState("us"); //dummy country
   const [modalVisible, setModalVisible] = useState(false);
   const { data, error, isError, isSuccess, isLoading } = useQuery({
     queryKey: ["newsByCategory"],
     queryFn: () => fetchHealthNewsByCountry(country),
   });
+
+  /*const { data, error, isLoading, isError } = useQuery({
+      queryKey: ["campaignsByKeywords"],
+      queryFn: () => fetchMultipleKeywords(country),
+    });
+
+   const results = useQueries({
+    queries: [
+      {
+        queryKey: ["newsByCategory"],
+        queryFn: () => fetchHealthNewsByCountry(country),
+        staleTime: 5 * 60 * 1000, // cache for 5 minutes
+        retry: 1,
+      },
+      {
+        queryKey: ["campaignsByKeywords"],
+        queryFn: () => fetchMultipleKeywords(country),
+        staleTime: 5 * 60 * 1000, // cache for 5 minutes
+      },
+    ],
+  });
+
+  const [newsResult, campaignsResult] = results;
+
+  const isLoading = campaignsResult.isLoading;
+  const isError = newsResult.isError || campaignsResult.isError; */
 
   /* useEffect(() => {
     fetchNews();
@@ -56,9 +81,6 @@ export default function HomeScreen() {
       > */}
       <View style={styles.titleContainer}>
         <ThemedText type="title">Hi there!</ThemedText>
-        <TouchableOpacity>
-          <Ionicons name="notifications" size={24} color="gold" />
-        </TouchableOpacity>
       </View>
 
       <View style={styles.rowContainer}>
@@ -78,44 +100,6 @@ export default function HomeScreen() {
               isError={isError}
               isLoading={isLoading}
             />
-            {/* {isLoading ? (
-              <ActivityIndicator size="large" />
-            ) : isError ? (
-              <View style={styles.error}>
-                <Text>Error: {error.message}</Text>
-              </View>
-            ) : (
-              <FlatList
-                data={data.articles}
-                keyExtractor={(item) => item.url}
-                renderItem={({ item }) => {
-                  return (
-                    <TouchableOpacity
-                      style={styles.articleContainer}
-                      onPress={() => {
-                        setSelectedNews(item);
-                        setModalVisible(true);
-                      }}
-                    >
-                      <ThemedText type="defaultSemiBold">
-                        {item.title}
-                      </ThemedText>
-                      {item.urlToImage && (
-                        <Image
-                          source={{ uri: item.urlToImage }}
-                          style={styles.cardImage}
-                        />
-                      )}
-                      <Text style={styles.articleDescription}>
-                        {item.description}
-                      </Text>
-                    </TouchableOpacity>
-                  );
-                }}
-                nestedScrollEnabled={true}
-                style={{ flex: 1 }}
-              />
-            )} */}
           </View>
           <ArticleModal
             isVisible={modalVisible}
@@ -128,17 +112,18 @@ export default function HomeScreen() {
 
         <ThemedView style={styles.newsContainer}>
           <ThemedText type="subtitle" style={{ fontSize: RFValue(20) }}>
-            Local Health Campaigns
+            Local Health Initiatives
           </ThemedText>
-          <ThemedText style={styles.smallText}></ThemedText>
+          {/* <HealthNewsList
+            data={campaignsResult.data}
+            error={campaignsResult.error}
+            isError={campaignsResult.isError}
+            isLoading={campaignsResult.isLoading}
+          /> */}
         </ThemedView>
       </View>
       <HealthTipsList />
 
-      {/* <TouchableOpacity style={styles.listContainer}>
-        <ThemedText type="subtitle">Preventive Health Tips</ThemedText>
-
-      </TouchableOpacity> */}
       {/* </ScrollView> */}
     </SafeAreaProvider>
   );
