@@ -41,7 +41,8 @@ export const HealthNewsList: React.FC<Props> = ({
   const [modalVisible, setModalVisible] = useState(false);
 
   return (
-    <View>
+    <View style={{ height: 300 }}>
+      {" "}
       {isLoading ? (
         <ActivityIndicator size="large" />
       ) : isError ? (

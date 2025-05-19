@@ -14,6 +14,8 @@ import { ThemedView } from "@/components/ThemedView";
 import { RFValue } from "react-native-responsive-fontsize";
 import { useQuery } from "@tanstack/react-query";
 import { fetchHealthFinderReco } from "@/lib/api/api";
+import { Dimensions } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 const HealthTipsList = () => {
   const [age, setAge] = useState(30);
@@ -41,7 +43,9 @@ const HealthTipsList = () => {
         Preventive Health Tips
       </ThemedText>
       {data?.Result?.MyHFHeading && (
-        <ThemedText>{data.Result.MyHFHeading}</ThemedText>
+        <ThemedText style={{ flexWrap: "wrap" }}>
+          {data.Result.MyHFHeading}
+        </ThemedText>
       )}
 
       {isLoading ? (
@@ -51,55 +55,52 @@ const HealthTipsList = () => {
           <Text>Error: {error.message}</Text>
         </View>
       ) : (
-        <FlatList
-          data={data.Result?.Resources?.all?.Resource}
-          numColumns={2}
-          columnWrapperStyle={styles.columnWrapper}
-          keyExtractor={(item) => item.Id}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              style={styles.articleContainer}
-              onPress={() => {
-                if (item.AccessibleVersion) {
-                  Linking.openURL(item.AccessibleVersion);
-                }
-              }}
-            >
-              <View style={styles.tipBox}>
-                <ThemedText type="defaultSemiBold" style={{ color: "black" }}>
-                  {item.Title}
-                </ThemedText>
-                <Text style={styles.articleDescription}>
-                  {item.MyHFDescription}
-                </Text>
-              </View>
-              {/* <View>
-                  {item.ImageUrl && (
-                    <Image
-                      source={{ uri: item.ImageUrl }}
-                      style={styles.image}
-                    />
-                  )} 
-                </View> */}
-            </TouchableOpacity>
-          )}
-          nestedScrollEnabled={true}
-        />
+        <View style={{ height: 200 }}>
+          <FlatList
+            data={data.Result?.Resources?.all?.Resource}
+            numColumns={2}
+            columnWrapperStyle={styles.columnWrapper}
+            keyExtractor={(item) => item.Id}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={styles.articleContainer}
+                onPress={() => {
+                  if (item.AccessibleVersion) {
+                    Linking.openURL(item.AccessibleVersion);
+                  }
+                }}
+              >
+                <View style={styles.tipBox}>
+                  <ThemedText type="defaultSemiBold" style={{ color: "black" }}>
+                    {item.Title}
+                  </ThemedText>
+                  <Text style={styles.articleDescription}>
+                    {item.MyHFDescription}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            )}
+            nestedScrollEnabled={true}
+            style={{ marginBottom: 10 }}
+          />
+        </View>
       )}
     </ThemedView>
   );
 };
+const screenWidth = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
   tipsContainer: {
     gap: 8,
-    backgroundColor: "orchid",
+    backgroundColor: "#2e8a60",
     padding: 10,
     borderRadius: 10,
     borderWidth: 1,
     overflow: "hidden",
     // flex: 1,
     flexWrap: "wrap",
+    width: screenWidth - 40,
   },
   tipBox: {
     justifyContent: "space-around",
