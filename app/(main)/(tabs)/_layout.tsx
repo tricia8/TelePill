@@ -7,6 +7,7 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -34,10 +35,17 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="consult"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: 'Consult',
+          tabBarIcon: ({ color }) => <FontAwesome5 size={28} name="comment-dots" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="card"
+        options={{
+          title: 'Info',
+          tabBarIcon: ({ color }) => <MaterialCommunityIcons size={28} name="card-account-details" color={color} />,
         }}
       />
     </Tabs>

@@ -1,11 +1,13 @@
-{
+import 'dotenv/config';
+
+export default {
   "expo": {
-    "name": "frontend",
-    "slug": "frontend",
+    "name": "telepill",
+    "slug": "telepill",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "frontend",
+    "scheme": "telepill",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -37,6 +39,9 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    extra: {
+      geminiApiKey: process.env.GEMINI_APIKEY,
     }
   }
 }
