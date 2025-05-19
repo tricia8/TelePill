@@ -59,7 +59,10 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
           />
         )}
 
-        <Text style={styles.articleDescription}>{article.content}</Text>
+        <Text style={styles.articleDescription}>
+          {" "}
+          {article.content ? article.content : "Content not available."}
+        </Text>
 
         <TouchableOpacity
           style={styles.readMoreButton}
@@ -87,7 +90,7 @@ const styles = StyleSheet.create({
     padding: 20,
     justifyContent: "space-between",
     alignItems: "center",
-    height: "60%",
+    height: "70%",
   },
   header: {
     flexDirection: "row",

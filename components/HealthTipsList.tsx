@@ -37,6 +37,10 @@ const HealthTipsList = () => {
     );
   } */
 
+  const stripHtml = (html: string) => {
+    return html.replace(/<[^>]*>?/gm, "");
+  };
+
   return (
     <ThemedView style={styles.tipsContainer}>
       <ThemedText type="subtitle" style={styles.header}>
@@ -75,7 +79,7 @@ const HealthTipsList = () => {
                     {item.Title}
                   </ThemedText>
                   <Text style={styles.articleDescription}>
-                    {item.MyHFDescription}
+                    {stripHtml(item.MyHFDescription)}
                   </Text>
                 </View>
               </TouchableOpacity>
@@ -99,7 +103,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     overflow: "hidden",
     // flex: 1,
-    flexWrap: "wrap",
     width: screenWidth - 40,
     height: 600,
   },
