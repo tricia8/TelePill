@@ -48,6 +48,8 @@ export const HealthNewsList: React.FC<Props> = ({
         <View>
           <Text>Error: {error?.message || "An unknown error occurred"}</Text>
         </View>
+      ) : !data?.articles?.length ? (
+        <Text style={styles.error}>No articles found.</Text>
       ) : (
         <FlatList
           data={data?.articles}
@@ -71,7 +73,6 @@ export const HealthNewsList: React.FC<Props> = ({
               </ThemedText>
             </TouchableOpacity>
           )}
-          nestedScrollEnabled
         />
       )}
       <ArticleModal
@@ -96,7 +97,11 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   articleDescription: {
-    fontSize: RFValue(13),
+    fontSize: RFValue(12),
     color: "#001146",
+  },
+  error: {
+    color: "#792a3c",
+    fontSize: RFValue(13),
   },
 });
