@@ -38,17 +38,17 @@ export default function HomeScreen() {
   // const { country } = useLocalSearchParams(); // extracts country parameter from the URL parameters (or: retrieve from firebase)
   const [country, setCountry] = useState("us"); //dummy country
   const [modalVisible, setModalVisible] = useState(false);
-  const { data, error, isError, isSuccess, isLoading } = useQuery({
+  /* const { data, error, isError, isSuccess, isLoading } = useQuery({
     queryKey: ["newsByCategory"],
     queryFn: () => fetchHealthNewsByCountry(country),
   });
 
-  /*const { data, error, isLoading, isError } = useQuery({
+   { data, error, isLoading, isError } = useQuery({
       queryKey: ["campaignsByKeywords"],
       queryFn: () => fetchMultipleKeywords(country),
-    });
+    }); */
 
-   const results = useQueries({
+  const results = useQueries({
     queries: [
       {
         queryKey: ["newsByCategory"],
@@ -67,7 +67,7 @@ export default function HomeScreen() {
   const [newsResult, campaignsResult] = results;
 
   const isLoading = campaignsResult.isLoading;
-  const isError = newsResult.isError || campaignsResult.isError; */
+  const isError = newsResult.isError || campaignsResult.isError;
 
   /* useEffect(() => {
     fetchNews();
@@ -75,10 +75,7 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaProvider style={styles.container}>
-      {/*<ScrollView
-        contentContainerStyle={styles.contentContainer}
-        nestedScrollEnabled={true}
-      > */}
+      {/* <ScrollView nestedScrollEnabled={true}> */}
       <View style={styles.titleContainer}>
         <ThemedText type="title">Hi there!</ThemedText>
       </View>
@@ -95,10 +92,10 @@ export default function HomeScreen() {
             {/* Drop down picker for country default curr location*/}
 
             <HealthNewsList
-              data={data}
-              error={error}
-              isError={isError}
-              isLoading={isLoading}
+              data={newsResult.data}
+              error={newsResult.error}
+              isError={newsResult.isError}
+              isLoading={newsResult.isLoading}
             />
           </View>
           <ArticleModal
@@ -114,16 +111,17 @@ export default function HomeScreen() {
           <ThemedText type="subtitle" style={{ fontSize: RFValue(20) }}>
             Local Health Initiatives
           </ThemedText>
-          {/* <HealthNewsList
+          <HealthNewsList
             data={campaignsResult.data}
             error={campaignsResult.error}
             isError={campaignsResult.isError}
             isLoading={campaignsResult.isLoading}
-          /> */}
+          />
         </ThemedView>
       </View>
-      <HealthTipsList />
-
+      <ThemedView>
+        <HealthTipsList />
+      </ThemedView>
       {/* </ScrollView> */}
     </SafeAreaProvider>
   );
@@ -132,6 +130,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: "column",
     paddingHorizontal: 20,
     paddingVertical: 20,
   },
@@ -161,6 +160,7 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     borderRadius: 10,
     borderWidth: 1,
+    height: 300,
   },
   articleContainer: {
     borderRadius: 10,
