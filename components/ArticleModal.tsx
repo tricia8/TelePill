@@ -38,7 +38,12 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
     >
       <View style={styles.modalContainer}>
         <View style={styles.header}>
-          <ThemedText type="defaultSemiBold">{article.title}</ThemedText>
+          <ThemedText
+            type="defaultSemiBold"
+            style={{ color: "white", gap: 10 }}
+          >
+            {article.title}
+          </ThemedText>
           <Pressable onPress={onClose}>
             <AntDesign name="closecircle" size={32} color="black" />
           </Pressable>
@@ -61,7 +66,7 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
             }
           }}
         >
-          <Text style={{ color: "#007AFF" }}>Read Full Article</Text>
+          <Text style={{ color: "#012595" }}>Read Full Article</Text>
         </TouchableOpacity>
       </View>
     </Modal>
@@ -71,7 +76,7 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
 const styles = StyleSheet.create({
   modalContainer: {
     // flex: 1,
-    backgroundColor: "#c9ddf4",
+    backgroundColor: "#3b5b80",
     margin: 20,
     borderRadius: 10,
     padding: 20,
@@ -86,14 +91,17 @@ const styles = StyleSheet.create({
   },
   cardImage: {
     height: 200,
+    width: 400,
+    objectFit: "contain",
     marginBottom: 10,
     borderRadius: 5,
   },
   articleDescription: {
     marginBottom: 10,
+    color: "white",
   },
   readMoreButton: {
-    padding: 8,
+    padding: 9,
     borderRadius: 5,
     backgroundColor: "#f0f0f0",
     alignItems: "center",
