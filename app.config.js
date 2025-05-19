@@ -1,47 +1,48 @@
-import 'dotenv/config';
+import "dotenv/config";
 
 export default {
-  "expo": {
-    "name": "telepill",
-    "slug": "telepill",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "scheme": "telepill",
-    "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
-    "ios": {
-      "supportsTablet": true
+  expo: {
+    name: "telepill",
+    slug: "telepill",
+    version: "1.0.0",
+    orientation: "portrait",
+    icon: "./assets/images/icon.png",
+    scheme: "telepill",
+    userInterfaceStyle: "automatic",
+    newArchEnabled: true,
+    ios: {
+      supportsTablet: true,
     },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+    android: {
+      adaptiveIcon: {
+        foregroundImage: "./assets/images/adaptive-icon.png",
+        backgroundColor: "#ffffff",
       },
-      "edgeToEdgeEnabled": true
+      edgeToEdgeEnabled: true,
     },
-    "web": {
-      "bundler": "metro",
-      "output": "static",
-      "favicon": "./assets/images/favicon.png"
+    web: {
+      bundler: "metro",
+      output: "static",
+      favicon: "./assets/images/favicon.png",
     },
-    "plugins": [
+    plugins: [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
-        }
-      ]
+          image: "./assets/images/splash-icon.png",
+          imageWidth: 200,
+          resizeMode: "contain",
+          backgroundColor: "#ffffff",
+        },
+      ],
     ],
-    "experiments": {
-      "typedRoutes": true
+    experiments: {
+      typedRoutes: true,
     },
     extra: {
       geminiApiKey: process.env.GEMINI_APIKEY,
-    }
-  }
-}
+      HFDevBaseUrl: process.env.DEV_BASE_URL,
+    },
+  },
+};
